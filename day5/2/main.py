@@ -1,7 +1,7 @@
 import math
 
 def main():
-    with open("E:\\home\\aoc2024\\day5\\1\\input") as f:
+    with open("E:\\home\\aoc2024\\day5\\2\\input") as f:
         input = f.read().splitlines()
 
 
