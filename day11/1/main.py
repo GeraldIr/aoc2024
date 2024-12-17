@@ -1,31 +1,46 @@
+import itertools
 import threading
 
+from collections import Counter
 
 def main():
-    with open("/home/gerald/co/aoc2024/day11/1/input", mode="r") as f:
+    with open("E:\\home\\aoc2024\\day11\\1\\input", mode="r") as f:
         input = [int(v) for v in f.read().splitlines()[0].split(" ")]
 
-        print(len(iterate_stones(input, 25)))
+        stones = iterate_stones(input, 25)
+        
+
+        print(sum(stones.values()))
 
 
-def apply_rules(stone):
-    if stone == 0:
-        return [1]
-    elif len(str(stone)) % 2 == 0:
-        x = int(str(stone)[: int(len(str(stone)) / 2)])
-        y = int(str(stone)[int(len(str(stone)) / 2) :].strip("0") or 0)
-        return [x, y]
-    else:
-        return [stone * 2024]
+
+def apply_rules(stones):
+    new_stones = Counter()
+    for stone_id, amount in stones:
+        if stone_id == 0:
+            new_stones[1] += amount
+        elif len(str(stone_id)) % 2 == 0:
+            x = int(str(stone_id)[: int(len(str(stone_id)) / 2)])
+            y = int(str(stone_id)[int(len(str(stone_id)) / 2) :].lstrip("0") or 0)
+            new_stones[x] += amount
+            new_stones[y] += amount
+        else:
+            new_stones[stone_id * 2024] += amount
+
+    return new_stones
 
 
 def iterate_stones(stones, iterations):
+    stones = Counter(stones)
     for i in range(iterations):
-        new_stones = []
-        for stone in stones:
-            new_stones = new_stones + apply_rules(stone)
-        stones = new_stones
+        stones = apply_rules(stones.items())
+        print(i)
+
     return stones
+
+def flatmap(func, *iterable):
+    return Counter(itertools.chain.from_iterable(map(func, *iterable)))
+
 
 
 if __name__ == "__main__":
